@@ -1,0 +1,250 @@
+/* === VARIABLES DE TEMA Y COLORES === */
+        :root {
+            --color-azul-bebe: #b3e5fc;
+            --color-rosa-fuerte: #d81b60;
+            --color-rosa-suave: #f8bbd0;
+            --color-amarillo: #fae596;
+            --color-amarillo-brillante: #ffd54f;
+            --color-mar: #4facfe;
+            --color-montana-1: #9cb4b8;
+            --color-montana-2: #8fa8ad;
+            
+            /* Colores del sobre */
+            --bg-color: #fdf5f7;
+            --env-inside: #e0c8d0;
+            --env-top: #f8bbd0;
+            --env-sides: #f48fb1;
+            --env-bottom: #f06292;
+            --heart-color: #d81b60;
+        }
+
+        /* === RESET === */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body, html {
+            width: 100%; height: 100%; overflow: hidden;
+            font-family: 'Lato', sans-serif;
+            background-color: var(--bg-color);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Instrucción superior */
+        .instruccion {
+            font-size: 1.1rem;
+            color: var(--heart-color);
+            font-style: italic;
+            transition: opacity 0.4s ease;
+            margin-bottom: 20px;
+        }
+
+        /* === ESTRUCTURA DEL SOBRE === */
+        .contenedor { 
+            position: relative; 
+            cursor: pointer; 
+            -webkit-tap-highlight-color: transparent;
+            /* Empuja el sobre hacia abajo para dejar más espacio libre arriba */
+            margin-top: 18vh; 
+        }
+
+        .envoltura-sobre {
+            position: relative; background-color: var(--env-inside);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15); border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        .envoltura-sobre:hover { transform: translateY(-3px); }
+
+        /* Tamaño base (Laptops y Desktops) */
+        .sobre { position: relative; width: 450px; height: 320px; border-radius: 10px; }
+
+        /* Solapas del sobre */
+        .sobre::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--env-top);
+            clip-path: polygon(0 0, 100% 0, 50% 55%); transform-origin: top;
+            transition: transform 0.5s ease-in-out, z-index 0.5s; z-index: 5;
+            border-top-left-radius: 10px; border-top-right-radius: 10px;
+        }
+        .solapa-izquierda {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--env-sides); clip-path: polygon(0 0, 50% 50%, 0 100%);
+            z-index: 3; border-top-left-radius: 10px; border-bottom-left-radius: 10px;
+        }
+        .solapa-derecha {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--env-sides); clip-path: polygon(100% 0, 50% 50%, 100% 100%);
+            z-index: 3; border-top-right-radius: 10px; border-bottom-right-radius: 10px;
+        }
+        .solapa-abajo {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--env-bottom); clip-path: polygon(0 100%, 50% 50%, 100% 100%);
+            z-index: 4; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;
+        }
+
+        /* Sello de Corazón */
+        .corazon {
+            position: absolute; top: 52%; left: 50%;
+            width: 45px; height: 45px; background-color: var(--heart-color);
+            transform: translate(-50%, -50%) rotate(45deg); z-index: 6;
+            transition: all 0.4s ease-in-out; box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+        .corazon::before, .corazon::after {
+            content: ''; position: absolute; width: 45px; height: 45px;
+            background-color: var(--heart-color); border-radius: 50%;
+        }
+        .corazon::before { top: -22px; left: 0; }
+        .corazon::after { top: 0; left: -22px; }
+
+        /* Animaciones del sobre */
+        .envoltura-sobre.abierto .sobre::before { transform: rotateX(180deg); z-index: 0; }
+        .envoltura-sobre.abierto .corazon { opacity: 0; transform: translate(-50%, -50%) rotate(90deg) scale(0); }
+
+        /* === LA CARTA QUE SALE === */
+        .carta {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+            background-color: #fff; border-radius: 8px; z-index: 1;
+            transition: transform 0.6s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            overflow: hidden; box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Distancia a la que sale la carta en Escritorio (Reducida para que no toque arriba) */
+        .carta.mostrar-carta { transform: translateY(-210px); }
+
+        /* === PAISAJE DE FONDO (Dentro de la carta) === */
+        .landscape { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .sky { position: absolute; top: 0; width: 100%; height: 50%; background: linear-gradient(to bottom, var(--color-azul-bebe), #fff3f8); }
+        .mountain { position: absolute; bottom: 50%; width: 0; height: 0; border-left: 140px solid transparent; border-right: 140px solid transparent; }
+        .m1 { left: -30px; border-bottom: 180px solid var(--color-montana-1); }
+        .m2 { right: -50px; border-bottom: 210px solid var(--color-montana-2); }
+        .ocean { position: absolute; top: 50%; width: 100%; height: 12%; background: linear-gradient(to bottom, var(--color-mar), #00f2fe); box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); }
+        .beach { position: absolute; top: 62%; width: 100%; height: 38%; background: linear-gradient(to bottom, var(--color-amarillo), #e8c678); }
+        .picnic-blanket {
+            position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%) rotate(2deg);
+            width: 130%; height: 120px; background-color: #ffffff;
+            background-image: linear-gradient(45deg, var(--color-rosa-suave) 25%, transparent 25%, transparent 75%, var(--color-rosa-suave) 75%, var(--color-rosa-suave)),
+                              linear-gradient(45deg, var(--color-rosa-suave) 25%, transparent 25%, transparent 75%, var(--color-rosa-suave) 75%, var(--color-rosa-suave));
+            background-size: 30px 30px; background-position: 0 0, 15px 15px; border-radius: 50% 50% 0 0;
+            box-shadow: 0 -8px 20px rgba(0,0,0,0.15);
+        }
+
+        /* === FLOR CENTRAL === */
+        .flower-wrapper {
+            position: absolute; width: 160px; height: 160px; z-index: 10;
+            top: 45%; left: 50%; margin-top: -80px; margin-left: -80px;
+            transform: scale(0); opacity: 0;
+        }
+        .carta.mostrar-carta .flower-wrapper {
+            animation: blossom 2.5s cubic-bezier(0.17, 0.89, 0.32, 1.15) 0.6s forwards;
+        }
+        .petal {
+            position: absolute; width: 36px; height: 75px;
+            background: linear-gradient(135deg, var(--color-rosa-suave), var(--color-rosa-fuerte));
+            border-radius: 50% 50% 20% 20%; transform-origin: bottom center;
+            bottom: 50%; left: calc(50% - 18px); box-shadow: 0 4px 12px rgba(216, 27, 96, 0.2); z-index: 1;
+        }
+        .p1 { transform: rotate(0deg); } .p2 { transform: rotate(45deg); } .p3 { transform: rotate(90deg); } .p4 { transform: rotate(135deg); }
+        .p5 { transform: rotate(180deg); } .p6 { transform: rotate(225deg); } .p7 { transform: rotate(270deg); } .p8 { transform: rotate(315deg); }
+        .flower-center {
+            position: absolute; width: 38px; height: 38px;
+            background: radial-gradient(circle, #fff, var(--color-amarillo-brillante));
+            border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 2; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        @keyframes blossom {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            70% { transform: scale(1.1) rotate(5deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* === CONTENIDO Y TIPOGRAFÍA === */
+        .content-card {
+            position: absolute; z-index: 20; top: 40%; left: 50%;
+            transform: translate(-50%, -30%); width: 85%; max-width: 380px; text-align: center;
+            background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 20px; padding: 25px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); opacity: 0; pointer-events: none;
+        }
+        .carta.mostrar-carta .content-card {
+            animation: fadeUpContent 1s ease-out 1.2s forwards;
+        }
+        @keyframes fadeUpContent { to { opacity: 1; transform: translate(-50%, -50%); } }
+
+        h1 { font-family: 'Playfair Display', serif; color: var(--color-rosa-fuerte); font-size: 2.2rem; line-height: 1.1; margin-bottom: 0.5rem; }
+        p { color: #333; font-size: 1.05rem; font-weight: 500; }
+
+        .corner-decor { position: absolute; font-size: 1.8rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); opacity: 0; }
+        .flower-1 { top: -20px; left: -15px; } .flower-2 { top: -20px; right: -15px; }
+        .flower-3 { bottom: -20px; left: -15px; } .flower-4 { bottom: -20px; right: -15px; }
+
+        .carta.mostrar-carta .flower-1 { animation: popIn 0.8s ease 1.5s forwards; }
+        .carta.mostrar-carta .flower-2 { animation: popIn 0.8s ease 1.7s forwards; }
+        .carta.mostrar-carta .flower-3 { animation: popIn 0.8s ease 1.9s forwards; }
+        .carta.mostrar-carta .flower-4 { animation: popIn 0.8s ease 2.1s forwards; }
+
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.5) rotate(-15deg); } 100% { opacity: 1; transform: scale(1) rotate(0deg); } }
+
+        /* === BOTÓN EXTERNO (Solo aparece al abrir) === */
+        .btn-action-outside {
+            position: fixed; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%) translateY(20px); 
+            background-color: var(--color-rosa-fuerte); 
+            color: white; 
+            border: none;
+            padding: 14px 35px; 
+            border-radius: 50px; 
+            font-size: 1.1rem; 
+            font-family: 'Lato', sans-serif; 
+            font-weight: 700;
+            box-shadow: 0 6px 20px rgba(216, 27, 96, 0.4); 
+            cursor: pointer; 
+            z-index: 9999; 
+            opacity: 0; 
+            pointer-events: none; 
+            transition: all 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+
+        .btn-action-outside.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+        }
+        .btn-action-outside:active { transform: translateX(-50%) scale(0.95); }
+
+
+        /* =========================================
+           === MEDIA QUERIES (RESPONSIVIDAD) ===
+           ========================================= */
+
+        /* TABLETS (Pantallas medianas) */
+        @media (max-width: 768px) {
+            .sobre { width: 380px; height: 280px; }
+            /* Sale menos la carta */
+            .carta.mostrar-carta { transform: translateY(-170px); }
+            /* Más margen arriba */
+            .contenedor { margin-top: 15vh; }
+            h1 { font-size: 1.9rem; }
+            p { font-size: 1rem; }
+        }
+
+        /* CELULARES (Pantallas pequeñas) */
+        @media (max-width: 480px) {
+            .sobre { width: 320px; height: 230px; }
+            /* Sale menos la carta */
+            .carta.mostrar-carta { transform: translateY(-130px); }
+            /* Más margen arriba */
+            .contenedor { margin-top: 10vh; }
+            .instruccion { font-size: 1rem; margin-bottom: 15px; }
+            .content-card { width: 92%; padding: 20px 10px; }
+            h1 { font-size: 1.6rem; }
+            p { font-size: 0.95rem; }
+            .corner-decor { font-size: 1.5rem; }
+            .corazon { width: 35px; height: 35px; }
+            .corazon::before, .corazon::after { width: 35px; height: 35px; }
+            .corazon::before { top: -17px; }
+            .corazon::after { left: -17px; }
+            .btn-action-outside { bottom: 20px; padding: 12px 30px; font-size: 1rem; }
+        }
