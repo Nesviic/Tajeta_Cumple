@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>¡Feliz Cumpleaños Brillitos!</title>
+    
+    <link rel="stylesheet" href="CSS/tarjetaStyle.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+</head>
+<body>
+
+    <p class="instruccion" id="texto-instruccion">Toca el sobre para abrir 💌</p>
+
+    <div class="contenedor" id="sobre-contenedor">
+        <div class="envoltura-sobre" id="envoltura">
+            <div class="sobre">
+                
+                <div class="carta" id="mi-carta">
+                    <div class="landscape" aria-hidden="true">
+                        <div class="sky"></div>
+                        <div class="mountain m1"></div>
+                        <div class="mountain m2"></div>
+                        <div class="ocean"></div>
+                        <div class="beach"></div>
+                        <div class="picnic-blanket"></div>
+                    </div>
+
+                    <div class="flower-wrapper" aria-hidden="true">
+                        <div class="petal p1"></div><div class="petal p2"></div>
+                        <div class="petal p3"></div><div class="petal p4"></div>
+                        <div class="petal p5"></div><div class="petal p6"></div>
+                        <div class="petal p7"></div><div class="petal p8"></div>
+                        <div class="flower-center"></div>
+                    </div>
+
+                    <main class="content-card">
+                        <span class="corner-decor flower-1" title="Tulipán">🌷</span>
+                        <span class="corner-decor flower-2" title="Rosa">🌹</span>
+                        <span class="corner-decor flower-3" title="Clavel">🏵️</span>
+                        <span class="corner-decor flower-4" title="Hortencia">🪻</span>
+
+                        <h1>¡Feliz Cumpleaños Brillitos!</h1>
+                        <p>Espero que lo pases hermoso tu dia, eres una maravillosa amiga y persona, I love u</p>
+                    </main>
+                </div>
+
+                <div class="corazon"></div>
+                <div class="solapa-izquierda"></div>
+                <div class="solapa-derecha"></div>
+                <div class="solapa-abajo"></div>
+            </div>
+        </div>
+    </div>
+
+    <button id="trigger-confetti" class="btn-action-outside">Festejar 🎉</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contenedor = document.getElementById('sobre-contenedor');
+            const envoltura = document.getElementById('envoltura');
+            const carta = document.getElementById('mi-carta');
+            const textoInstruccion = document.getElementById('texto-instruccion');
+            const btnConfeti = document.getElementById('trigger-confetti');
+            
+            const confettiColors = ['#d81b60', '#ffd54f', '#b3e5fc', '#ffffff'];
+
+            // Función para celebrar (lluvia de los lados)
+            const triggerInitialCelebration = () => {
+                const duration = 1500;
+                const end = Date.now() + duration;
+
+                (function frame() {
+                    confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: confettiColors, zIndex: 9999 });
+                    confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: confettiColors, zIndex: 9999 });
+                    if (Date.now() < end) requestAnimationFrame(frame);
+                }());
+            };
+
+            // Lógica para abrir/cerrar el sobre
+            contenedor.addEventListener('click', () => {
+                if (!envoltura.classList.contains('abierto')) {
+                    // 1. Abrir solapa
+                    envoltura.classList.add('abierto');
+                    textoInstruccion.style.opacity = '0'; 
+
+                    // 2. Sacar carta
+                    setTimeout(() => {
+                        carta.classList.add('mostrar-carta');
+                        
+                        // 3. Mostrar el botón externo y lanzar confeti después de que la carta salga
+                        setTimeout(() => {
+                            btnConfeti.classList.add('visible');
+                            triggerInitialCelebration();
+                        }, 1200);
+                        
+                    }, 500); 
+
+                } else {
+                    // Si toca el sobre de nuevo, lo cierra
+                    btnConfeti.classList.remove('visible'); // Ocultar botón de inmediato
+                    carta.classList.remove('mostrar-carta'); // Guardar carta
+                    
+                    setTimeout(() => {
+                        envoltura.classList.remove('abierto'); // Cerrar solapa
+                        textoInstruccion.style.opacity = '1'; // Mostrar instrucción
+                    }, 500);
+                }
+            });
+
+            // Botón de confeti manual
+            btnConfeti.addEventListener('click', (e) => {
+                e.stopPropagation(); // Evita que el clic en el botón cierre el sobre accidentalmente
+                confetti({
+                    particleCount: 120, spread: 80, origin: { y: 0.6 },
+                    colors: confettiColors, disableForReducedMotion: true, zIndex: 9999
+                });
+            });
+        });
+    </script>
+</body>
+</html>
